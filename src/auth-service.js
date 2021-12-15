@@ -2,14 +2,14 @@ import createAuth0Client from "@auth0/auth0-spa-js";
 import { user, isAuthenticated, popupOpen, token } from "./store";
 import { require } from "dotenv";
 // import { require } from "dotenv";
-// import config from "./auth-config";
+import config from "./auth-config";
 import { DOMAIN, CLIENTID } from ".env";
 // require('dotenv').config();
 
 async function createClient() {
   return await createAuth0Client({
-    domain: DOMAIN,
-    client_id: CLIENTID,
+    domain: config.domain,
+    client_id: config.clientID,
   });
 }
 
