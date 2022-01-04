@@ -7,7 +7,11 @@
   import { debtors, isAuthenticated, token, user } from "./store";
   import { onMount } from "svelte";
   import auth from "./auth-service";
-
+  import { errorMSG } from "./stores.js";
+  let errorMessage;
+  errorMSG.subscribe(value => {
+    errorMessage = value;
+  });
   token.subscribe(async tokenValue => {
     if (tokenValue != "") {
       const { laba5_Debtors } = await http.startFetchMyQuery(
@@ -60,10 +64,23 @@
     newDebtorArr = document
       .getElementById("newDebtorInputbox")
       .value.split(" ");
-    if (newDebtorArr[0] == "" || newDebtorArr[1] == "") return;
-    const { insert_laba5_Debtors } = await http.startExecuteMyMutation(
-      Queries.InsertRecord(newDebtorArr[0], newDebtorArr[1], newDebtorArr[2])
-    );
+    if (
+      newDebtorArr.length != 3 ||
+      newDebtorArr[0] == "" ||
+      newDebtorArr[1] == ""
+    ) {
+      errorMSG.update(n => (n = "Введіть ім'я, прізвище та борг"));
+      return;
+    }
+    try {
+      await http.startExecuteMyMutation(
+        Queries.InsertRecord(newDebtorArr[0], newDebtorArr[1], newDebtorArr[2])
+      );
+    } catch {
+      errorMSG.update(n => (n = "Помилка"));
+      return;
+    }
+    errorMSG.update(n => (n = ""));
     debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
   };
 
@@ -98,6 +115,7 @@
             </tr>
           {/each}
         </table>
+        <p>{errorMessage}</p>
       {/if}
     {:else}
       <button on:click={login}>Login</button>
