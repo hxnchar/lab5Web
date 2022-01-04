@@ -7,7 +7,7 @@
   import { debtors, isAuthenticated, token, user } from "./store";
   import { onMount } from "svelte";
   import auth from "./auth-service";
-  import { errorMSG } from "./stores.js";
+  import { errorMSG } from "/stores.js";
   let errorMessage;
   errorMSG.subscribe(value => {
     errorMessage = value;
