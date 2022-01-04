@@ -4,10 +4,9 @@
   import { WebSocketLink } from "@apollo/client/link/ws";
   import http from "./helper/request-helper";
   import { Queries } from "./helper/requests";
-  import { debtors, isAuthenticated, token, user } from "./store";
+  import { debtors, isAuthenticated, token, user, errorMSG } from "./store";
   import { onMount } from "svelte";
   import auth from "./auth-service";
-  import { errorMSG } from "/stores.js";
   let errorMessage;
   errorMSG.subscribe(value => {
     errorMessage = value;
