@@ -4,7 +4,7 @@ import { user, isAuthenticated, popupOpen, token } from "./store";
 async function createClient() {
   return await createAuth0Client({
     domain: domain_env,
-    client_id: "2pBEnwTuQSWsBolXYzblfaucNebxEQIZ",
+    client_id: clientID_env,
   });
 }
 
