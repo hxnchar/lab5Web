@@ -61,13 +61,14 @@
       return;
     }
     try {
-      await http.startExecuteMyMutation(
+      const { insert_laba5_Debtors } = await http.startExecuteMyMutation(
         Queries.InsertRecord(
           newDeptorInfo.surname,
           newDeptorInfo.name,
           newDeptorInfo.money
         )
       );
+      debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
     } catch {
       errorMSG.set("Error occurred");
       addDebtorDisabled = false;
@@ -77,7 +78,6 @@
     addDebtorDisabled = false;
     loadersCount.update(n => n - 1);
     errorMSG.set("");
-    debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
   };
 
   const RemoveDebtors = async () => {
@@ -106,7 +106,7 @@
         <Jumper size="60" color="#FF3E00" unit="px" />
       {:else if $debtors.error}
         <div>Error!</div>
-      {:else if $debtors.data}
+      {:else if $debtors}
         <input bind:value={newDeptorInfo.surname} placeholder="Surname" />
         <input bind:value={newDeptorInfo.name} placeholder="Name" />
         <input bind:value={newDeptorInfo.money} placeholder="Debt" />
@@ -116,6 +116,7 @@
         <button on:click={RemoveDebtors} disabled={removeDebtorDisabled}
           >Delete some debtors =)</button
         >
+        <button on:click={logout}>Log out</button>
         <table border="1">
           <caption>Debtors</caption>
           <tr>
@@ -123,11 +124,11 @@
             <th>Name</th>
             <th>Debt</th>
           </tr>
-          {#each $debtors.data.debtors as debtor (debtor.id)}
+          {#each $debtors as debtor (debtor.id)}
             <tr>
-              <td>{debtor.surname}</td>
-              <td>{debtor.name}</td>
-              <td>{debtor.debt}</td>
+              <td>{debtor.Surname}</td>
+              <td>{debtor.Name}</td>
+              <td>{debtor.Debt}</td>
             </tr>
           {/each}
         </table>
