@@ -1,8 +1,5 @@
 import createAuth0Client from "@auth0/auth0-spa-js";
 import { user, isAuthenticated, popupOpen, token } from "./store";
-import config from "./auth-config";
-import { DOMAIN, CLIENTID } from ".env";
-// require('dotenv').config();
 
 async function createClient() {
   return await createAuth0Client({
