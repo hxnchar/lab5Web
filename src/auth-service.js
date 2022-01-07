@@ -3,7 +3,7 @@ import { user, isAuthenticated, popupOpen, token } from "./store";
 
 async function createClient() {
   return await createAuth0Client({
-    domain: "dev-acapbdtc.us.auth0.com",
+    domain: domain_env,
     client_id: "2pBEnwTuQSWsBolXYzblfaucNebxEQIZ",
   });
 }
