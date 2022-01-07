@@ -1,5 +1,3 @@
-import { gql } from "@apollo/client";
-
 export class Queries {
   static AllRecords = () => `
     query MyQuery {
@@ -36,17 +34,6 @@ export class Queries {
           Name
           Debt
         }
-      }
-    }
-  `;
-
-  static SUBSCRIPTION_AllTodos = gql`
-    subscription MySubscription {
-      laba5_Debtors {
-        userID
-        Surname
-        Name
-        Debt
       }
     }
   `;
