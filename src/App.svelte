@@ -69,8 +69,8 @@
         )
       );
       debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
-    } catch {
-      errorMSG.set("Error occurred");
+    } catch (e) {
+      errorMSG.set("Error occurred: " + e.message)
       addDebtorDisabled = false;
       loadersCount.update(n => n - 1);
       return;
@@ -85,8 +85,8 @@
     loadersCount.update(n => n + 1);
     try {
       await http.startExecuteMyMutation(Queries.DeleteNegative());
-    } catch {
-      errorMSG.set("Error occurred");
+    } catch (e) {
+      errorMSG.set("Error occurred: " + e.message);
       removeDebtorDisabled = false;
       loadersCount.update(n => n - 1);
       return;
@@ -113,8 +113,7 @@
     {:else if $debtors}
       <header>Debtors list</header>
       <main>
-        <table border>
-          <caption>Debtors</caption>
+        <table>
           <tr>
             <th>Surname</th>
             <th>Name</th>
