@@ -10,6 +10,9 @@ class RequestHelper {
         variables: variables,
         operationName: operationName,
       }),
+      headers: {
+        Authorization: `Bearer ${get(token)}`,
+      },
     }).then(result => {
       return result.json();
     });
