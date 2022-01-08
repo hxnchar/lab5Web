@@ -70,7 +70,7 @@
       );
       debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
     } catch (e) {
-      errorMSG.set("Error occurred: " + e.message);
+      errorMSG.set("Error occurred: " + e.message)
       addDebtorDisabled = false;
       loadersCount.update(n => n - 1);
       return;
