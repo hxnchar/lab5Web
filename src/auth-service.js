@@ -1,8 +1,8 @@
 import createAuth0Client from "@auth0/auth0-spa-js";
 import { user, isAuthenticated, popupOpen, token } from "./store";
 
-async function createClient() {
-  return await createAuth0Client({
+function createClient() {
+  return createAuth0Client({
     domain: domain_env,
     client_id: clientID_env,
   });
@@ -17,7 +17,7 @@ async function loginWithPopup(client, options) {
     token.set(accessToken.__raw);
     isAuthenticated.set(true);
   } catch (e) {
-    console.log(e);
+    throw new Error(errors[0].message);
   } finally {
     popupOpen.set(false);
   }
