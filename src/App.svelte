@@ -12,8 +12,9 @@
   import { onMount } from "svelte";
   import { BarLoader } from "svelte-loading-spinners";
   import auth from "./auth-service";
-  import { mutation } from "svelte-apollo";
+  let addDebtorDisabled, removeDebtorDisabled;
 
+  const newDeptorInfo = {};
   token.subscribe(async tokenValue => {
     if (tokenValue != "") {
       const { laba5_Debtors } = await http.startFetchMyQuery(
@@ -55,24 +56,25 @@
     if (!name || !surname || !money) {
       addDebtorDisabled = false;
       $loadersCount--;
-      $errorMessage = "Surname, name and debt are required!";
+      $errorMessage.set("Surname, name and debt are required!");
       return;
     }
     try {
-      await addDebtorQuery({
-        variables: {
-          surname: newDeptorInfo.surname,
-          name: newDeptorInfo.name,
-          debt: newDeptorInfo.money,
-        },
-      });
+      const { insert_laba5_Debtors } = await http.startExecuteMyMutation(
+        Queries.InsertRecord(
+          newDeptorInfo.surname,
+          newDeptorInfo.name,
+          newDeptorInfo.money
+        )
+      );
+      $errorMessage = "";
       debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
       $errorMessage = "";
     } catch (e) {
       $errorMessage = `Error occurred: ${e.message}`;
     } finally {
-      addDebtorDisabled = false;
       $loadersCount--;
+      removeDebtorDisabled = false;
     }
   };
 
@@ -80,14 +82,14 @@
     removeDebtorDisabled = true;
     $loadersCount++;
     try {
-      await deleteRecordsQuery();
+      await http.startExecuteMyMutation(Queries.DeleteNegative());
       debtors.update(n => n.filter(item => item.Debt > 0));
       $errorMessage = "";
     } catch (e) {
       $errorMessage = `Error occurred: ${e.message}`;
     } finally {
-      removeDebtorDisabled = false;
       $loadersCount--;
+      removeDebtorDisabled = false;
     }
   };
 </script>
@@ -118,9 +120,9 @@
             </tr>
             {#each $debtors as debtor (debtor.id)}
               <tr>
-                <td>{debtor.surname}</td>
-                <td>{debtor.name}</td>
-                <td>{debtor.debt}</td>
+                <td>{debtor.Surname}</td>
+                <td>{debtor.Name}</td>
+                <td>{debtor.Debt}</td>
               </tr>
             {/each}
           </table>
@@ -266,12 +268,12 @@
     top: 0;
     left: 0;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 0;
   }
-
-  .overlay.background {
+  .overlay .background {
     width: 100%;
     height: 100%;
     background-color: var(--darkest-blue);
