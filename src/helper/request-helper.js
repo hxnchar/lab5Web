@@ -25,7 +25,7 @@ class RequestHelper {
   async startFetchMyQuery(operationsDoc) {
     const { errors, data } = await this.fetchMyQuery(operationsDoc);
     if (errors) {
-      throw new Error(errors[0].message);
+      throw new Error(errors[0].message || "Unknown error");
     }
     return data;
   }
@@ -37,7 +37,7 @@ class RequestHelper {
   async startExecuteMyMutation(operationsDoc) {
     const { errors, data } = await this.executeMyMutation(operationsDoc);
     if (errors) {
-      throw new Error(errors[0].message);
+      throw new Error(errors[0].message  || "Unknown error");
     }
     return data;
   }
