@@ -9,8 +9,8 @@ function createClient() {
 }
 
 async function loginWithPopup(client, options) {
-  popupOpen.set(true);
   try {
+    popupOpen.set(true);
     await client.loginWithPopup(options);
     user.set(await client.getUser());
     const accessToken = await client.getIdTokenClaims();
