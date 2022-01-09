@@ -12,9 +12,7 @@
   import { onMount } from "svelte";
   import { BarLoader } from "svelte-loading-spinners";
   import auth from "./auth-service";
-  let addDebtorDisabled, removeDebtorDisabled;
 
-  const newDeptorInfo = {};
   token.subscribe(async tokenValue => {
     if (tokenValue != "") {
       const { laba5_Debtors } = await http.startFetchMyQuery(
@@ -27,8 +25,6 @@
   let auth0Client;
   let addDebtorDisabled, removeDebtorDisabled;
   const newDeptorInfo = {};
-  const addDebtorQuery = mutation(Queries.InsertRecord);
-  const deleteRecordsQuery = mutation(Queries.DeleteRecords);
 
   onMount(async () => {
     auth0Client = await auth.createClient();

@@ -11,27 +11,29 @@ export class Queries {
     }
   `;
 
-  static DeleteRecords = gql`
+  static InsertRecord = (Surname, Name, Debt) => `
     mutation MyMutation {
-      delete_debtors(where: { debt: { _lte: 0 } }) {
+        insert_laba5_Debtors(objects: {Surname: "${Surname}", Name: "${Name}", Debt: ${Debt}}) {
         returning {
-          debt
-          name
-          surname
+            id
+            userID
+            Surname
+            Name
+            Debt
         }
-      }
+        }
     }
-  `;
+    `;
 
-  static InsertRecord = gql`
-    mutation MyMutation($surname: String, $name: String, $debt: Int = "0") {
-      insert_debtors_one(
-        object: { surname: $surname, name: $name, debt: $debt }
-      ) {
-        id
-        surname
-        name
-        debt
+  static DeleteNegative = () => `
+    mutation MyMutation {
+      delete_laba5_Debtors(where: {Debt: {_lte: 0}}) {
+        returning {
+          userID
+          Surname
+          Name
+          Debt
+        }
       }
     }
   `;
