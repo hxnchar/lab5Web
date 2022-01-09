@@ -63,7 +63,6 @@
           newDeptorInfo.money
         )
       );
-      $errorMessage = "";
       debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
       $errorMessage = "";
     } catch (e) {
