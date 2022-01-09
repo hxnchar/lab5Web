@@ -52,7 +52,7 @@
     if (!name || !surname || !money) {
       addDebtorDisabled = false;
       $loadersCount--;
-      $errorMessage.set("Surname, name and debt are required!");
+      $errorMessage = "Surname, name and debt are required!";
       return;
     }
     try {
