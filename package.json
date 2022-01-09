@@ -22,6 +22,7 @@
     "eslint-plugin-sonarjs": "^0.11.0",
     "eslint-plugin-svelte3": "^3.2.1",
     "husky": "^7.0.4",
+    "lint-staged": "^12.1.7",
     "prettier": "^2.5.0",
     "prettier-plugin-svelte": "^2.5.0",
     "rollup": "^2.3.4",
@@ -33,6 +34,7 @@
     "stylelint-config-recommended-scss": "^5.0.2",
     "stylelint-config-standard": "^24.0.0",
     "stylelint-config-svelte-roboleary": "^0.3.0",
+    "stylelint-high-performance-animation": "^1.6.0",
     "svelte": "^3.0.0"
   },
   "dependencies": {
@@ -41,5 +43,10 @@
     "dotenv": "^10.0.0",
     "sirv-cli": "^1.0.0",
     "svelte-loading-spinners": "^0.1.7"
+  },
+  "lint-staged": {
+    "*.*": "npm run format:fix",
+    "*.{js,jsx}": "npm run eslint:fix",
+    "*.{css,scss,sass}": "npm run stylelint:fix"
   }
 }
