@@ -104,7 +104,7 @@
     {:else if $debtors}
       <header>Debtors list</header>
       <main>
-        {#if $debtors.length == 0}
+        {#if $debtors.length === 0}
           <h1>No deptors yet :(</h1>
         {:else}
           <table>
