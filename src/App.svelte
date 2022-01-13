@@ -7,7 +7,7 @@
     token,
     user,
     messageToUser,
-    loadersCount
+    loadersCount,
   } from "./store";
   import { onMount } from "svelte";
   import { BarLoader } from "svelte-loading-spinners";
@@ -139,9 +139,7 @@
             <input bind:value={newDeptorInfo.money} placeholder="Debt" />
           </nav>
           <nav>
-            <button on:click={AddDebtor}
-              >Add debtor</button
-            >
+            <button on:click={AddDebtor}>Add debtor</button>
             <button on:click={logout}>Log out</button>
           </nav>
         </main>
