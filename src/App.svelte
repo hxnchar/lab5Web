@@ -63,7 +63,8 @@
     } catch (e) {
       $messageToUser = `Error occurred while inserting: ${e.message}. Check values to be inserted`;
     } finally {
-      loadersCount.update(n => n - 1);
+      // не вынес в startExecuteMyMutation, потому что там был бы костыль
+      $loadersCount--;
     }
   };
 
@@ -75,7 +76,8 @@
     } catch (e) {
       $messageToUser = `Error occurred: ${e.message}`;
     } finally {
-      loadersCount.update(n => n - 1);
+      // не вынес в startExecuteMyMutation, потому что там был бы костыль
+      $loadersCount--;
     }
   };
 </script>
