@@ -1,4 +1,5 @@
-import { token, get, loadersCount } from "../store";
+import { token, loadersCount } from "../store";
+import { get } from "svelte/store";
 
 class RequestHelper {
   API_URL = api_url_env;
