@@ -6,12 +6,21 @@
     isAuthenticated,
     token,
     user,
-    errorMessage,
+    messageToUser,
     loadersCount,
+    isOnline
   } from "./store";
   import { onMount } from "svelte";
   import { BarLoader } from "svelte-loading-spinners";
   import auth from "./auth-service";
+
+  window.onoffline = () => {
+    isOnline.set(false);
+  };
+
+  window.ononline = () => {
+    isOnline.set(true);
+  };
 
   token.subscribe(async tokenValue => {
     if (tokenValue != "") {
@@ -25,6 +34,7 @@
   let auth0Client;
   let addDebtorDisabled, removeDebtorDisabled;
   const newDeptorInfo = {};
+  const defaultValue = "";
 
   onMount(async () => {
     auth0Client = await auth.createClient();
@@ -45,14 +55,18 @@
     auth.logout(auth0Client);
   }
 
+  function resetValues() {
+    newDeptorInfo.name = defaultValue;
+    newDeptorInfo.surname = defaultValue;
+    newDeptorInfo.money = defaultValue;
+  }
+  
   const AddDebtor = async () => {
-    addDebtorDisabled = true;
     $loadersCount++;
     const { name, surname, money } = newDeptorInfo;
     if (!name || !surname || !money) {
-      addDebtorDisabled = false;
       $loadersCount--;
-      $errorMessage = "Surname, name and debt are required!";
+      $messageToUser = "Surname, name and debt are required!";
       return;
     }
     try {
@@ -64,94 +78,101 @@
         )
       );
       debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
-      $errorMessage = "";
+      resetValues();
+      $messageToUser = "Added successfully";
     } catch (e) {
-      $errorMessage = `Error occurred: ${e.message}`;
+      $messageToUser = `Error occurred while inserting: ${e.message}. Check values to be inserted`;
     } finally {
       $loadersCount--;
-      removeDebtorDisabled = false;
     }
   };
 
-  const RemoveDebtors = async () => {
-    removeDebtorDisabled = true;
+  const DeleteThis = async (idToRemove) => {
     $loadersCount++;
     try {
-      await http.startExecuteMyMutation(Queries.DeleteNegative());
-      debtors.update(n => n.filter(item => item.Debt > 0));
-      $errorMessage = "";
+      await http.startExecuteMyMutation(Queries.DeleteById(idToRemove));
+      debtors.update(n => n.filter(item => item.id != idToRemove));
+      $messageToUser = "Deleted successfully";
     } catch (e) {
-      $errorMessage = `Error occurred: ${e.message}`;
+      $messageToUser = `Error occurred: ${e.message}`;
     } finally {
       $loadersCount--;
-      removeDebtorDisabled = false;
     }
   };
 </script>
 
 <main>
-  {#if $isAuthenticated}
-    {#if $debtors.loading}
-      <div class="overlay">
-        <BarLoader size="120" color="white" unit="px" />
-        <div class="overlay background" />
-      </div>
-    {:else if $debtors.error}
-      <div class="overlay">
-        <h1>Error occurred :(</h1>
-        <div class="overlay background" />
-      </div>
-    {:else if $debtors}
-      <header>Debtors list</header>
-      <main>
-        {#if $debtors.length === 0}
-          <h1>No deptors yet :(</h1>
-        {:else}
-          <table>
-            <tr>
-              <th>Surname</th>
-              <th>Name</th>
-              <th>Debt</th>
-            </tr>
-            {#each $debtors as debtor (debtor.id)}
+  {#if $isOnline}
+    {#if $isAuthenticated}
+      {#if $debtors.loading}
+        <div class="overlay">
+          <BarLoader size="120" color="white" unit="px" />
+          <div class="overlay background" />
+        </div>
+      {:else if $debtors.error}
+        <div class="overlay">
+          <h1>Error occurred :(</h1>
+          <div class="overlay background" />
+        </div>
+      {:else if $debtors}
+        <header>Debtors list</header>
+        <main>
+          {#if $debtors.length === 0}
+            <h1>No deptors yet :(</h1>
+          {:else}
+            <table>
               <tr>
-                <td>{debtor.Surname}</td>
-                <td>{debtor.Name}</td>
-                <td>{debtor.Debt}</td>
+                <th>Surname</th>
+                <th>Name</th>
+                <th>Debt</th>
               </tr>
-            {/each}
-          </table>
-        {/if}
-        <nav>
-          <input bind:value={newDeptorInfo.surname} placeholder="Surname" />
-          <input bind:value={newDeptorInfo.name} placeholder="Name" />
-          <input bind:value={newDeptorInfo.money} placeholder="Debt" />
-        </nav>
-        <nav>
-          <button on:click={AddDebtor} disabled={addDebtorDisabled}
-            >Add debtor</button
-          >
-          <button on:click={RemoveDebtors} disabled={removeDebtorDisabled}
-            >Delete some debtors</button
-          >
-          <button on:click={logout}>Log out</button>
-        </nav>
-      </main>
-      <footer>
-        <div class="errorLabel">{$errorMessage}</div>
-      </footer>
-      <div class="overlay" class:visible={!$loadersCount}>
-        <BarLoader size="120" color="white" unit="px" />
-        <div class="overlay background" />
-      </div>
-    {/if}
-  {:else}
+              {#each $debtors as debtor (debtor.id)}
+                <tr>
+                  <td>{debtor.Surname}</td>
+                  <td>{debtor.Name}</td>
+                  <td>{debtor.Debt}</td>
+                  <td
+                    ><button on:click={() => DeleteThis(debtor.id)}>Delete</button
+                    ></td
+                  >
+                </tr>
+              {/each}
+            </table>
+          {/if}
+          <nav>
+            <input bind:value={newDeptorInfo.surname} placeholder="Surname" />
+            <input bind:value={newDeptorInfo.name} placeholder="Name" />
+            <input bind:value={newDeptorInfo.money} placeholder="Debt" />
+          </nav>
+          <nav>
+            <button on:click={AddDebtor} disabled={addDebtorDisabled}
+              >Add debtor</button
+            >
+            <button on:click={logout}>Log out</button>
+          </nav>
+        </main>
+        <footer>
+          <div class="errorLabel">{$messageToUser}</div>
+        </footer>
+        <div class="overlay" class:visible={!$loadersCount}>
+          <BarLoader size="120" color="white" unit="px" />
+          <div class="overlay background" />
+        </div>
+      {/if}
+      {:else}
+        <div class="overlay">
+          <h1>Please login before start</h1>
+          <button on:click={login}>Login</button>
+          <div class="overlay background" />
+        </div>
+      {/if}
+    {:else}
     <div class="overlay">
-      <h1>Please login before start</h1>
-      <button on:click={login}>Login</button>
+      <h1>Waiting the internet connection to be restored</h1>
+      <BarLoader size="120" color="white" unit="px" />
       <div class="overlay background" />
     </div>
-  {/if}
+    {/if}
 </main>
 
 <style>

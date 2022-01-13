@@ -25,15 +25,12 @@ export class Queries {
     }
     `;
 
-  static DeleteNegative = () => `
+  static DeleteById = (idToBeDeleted) => `
     mutation MyMutation {
-      delete_laba5_Debtors(where: {Debt: {_lte: 0}}) {
-        returning {
-          userID
-          Surname
-          Name
-          Debt
-        }
+      delete_laba5_Debtors_by_pk(id: "${idToBeDeleted}") {
+        Surname
+        Name
+        Debt
       }
     }
   `;
