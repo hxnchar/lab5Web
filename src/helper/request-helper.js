@@ -1,5 +1,6 @@
 import { token } from "../store";
-import { get } from "svelte/store";
+import { get, messageToUser, loadersCount } from "svelte/store";
+
 class RequestHelper {
   API_URL = api_url_env;
   async fetchGraphQL(operationsDoc, operationName, variables) {
@@ -23,6 +24,7 @@ class RequestHelper {
   }
 
   async startFetchMyQuery(operationsDoc) {
+    loadersCount.update(n => n + 1);
     const { errors, data } = await this.fetchMyQuery(operationsDoc);
     if (errors) {
       throw new Error(errors[0].message || "Unknown error");
@@ -35,6 +37,7 @@ class RequestHelper {
   }
 
   async startExecuteMyMutation(operationsDoc) {
+    loadersCount.update(n => n + 1);
     const { errors, data } = await this.executeMyMutation(operationsDoc);
     if (errors) {
       throw new Error(errors[0].message || "Unknown error");

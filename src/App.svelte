@@ -23,8 +23,7 @@
   });
 
   let auth0Client, online;
-  const newDeptorInfo = {};
-  const defaultValue = "";
+  let newDeptorInfo = {};
 
   onMount(async () => {
     auth0Client = await auth.createClient();
@@ -45,17 +44,9 @@
     auth.logout(auth0Client);
   }
 
-  function resetValues() {
-    newDeptorInfo.name = defaultValue;
-    newDeptorInfo.surname = defaultValue;
-    newDeptorInfo.money = defaultValue;
-  }
-
   const AddDebtor = async () => {
-    $loadersCount++;
     const { name, surname, money } = newDeptorInfo;
     if (!name || !surname || !money) {
-      $loadersCount--;
       $messageToUser = "Surname, name and debt are required!";
       return;
     }
@@ -68,7 +59,7 @@
         )
       );
       debtors.update(n => [...n, insert_laba5_Debtors.returning[0]]);
-      resetValues();
+      newDeptorInfo = {};
       $messageToUser = "Added successfully";
     } catch (e) {
       $messageToUser = `Error occurred while inserting: ${e.message}. Check values to be inserted`;
@@ -78,7 +69,6 @@
   };
 
   const DeleteThis = async idToRemove => {
-    $loadersCount++;
     try {
       await http.startExecuteMyMutation(Queries.DeleteById(idToRemove));
       debtors.update(n => n.filter(item => item.id != idToRemove));
