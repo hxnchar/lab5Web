@@ -125,6 +125,7 @@
                 <th>Surname</th>
                 <th>Name</th>
                 <th>Debt</th>
+                <th>Action</th>
               </tr>
               {#each $debtors as debtor (debtor.id)}
                 <tr>
