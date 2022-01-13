@@ -7,20 +7,11 @@
     token,
     user,
     messageToUser,
-    loadersCount,
-    isOnline,
+    loadersCount
   } from "./store";
   import { onMount } from "svelte";
   import { BarLoader } from "svelte-loading-spinners";
   import auth from "./auth-service";
-
-  window.onoffline = () => {
-    isOnline.set(false);
-  };
-
-  window.ononline = () => {
-    isOnline.set(true);
-  };
 
   token.subscribe(async tokenValue => {
     if (tokenValue != "") {
@@ -31,8 +22,7 @@
     }
   });
 
-  let auth0Client;
-  let addDebtorDisabled, removeDebtorDisabled;
+  let auth0Client, online;
   const newDeptorInfo = {};
   const defaultValue = "";
 
@@ -101,8 +91,10 @@
   };
 </script>
 
+<svelte:window bind:online />
+
 <main>
-  {#if $isOnline}
+  {#if $online}
     {#if $isAuthenticated}
       {#if $debtors.loading}
         <div class="overlay">
@@ -147,7 +139,7 @@
             <input bind:value={newDeptorInfo.money} placeholder="Debt" />
           </nav>
           <nav>
-            <button on:click={AddDebtor} disabled={addDebtorDisabled}
+            <button on:click={AddDebtor}
               >Add debtor</button
             >
             <button on:click={logout}>Log out</button>
