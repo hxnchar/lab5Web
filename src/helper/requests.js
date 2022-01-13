@@ -25,7 +25,7 @@ export class Queries {
     }
     `;
 
-  static DeleteById = (idToBeDeleted) => `
+  static DeleteById = idToBeDeleted => `
     mutation MyMutation {
       delete_laba5_Debtors_by_pk(id: "${idToBeDeleted}") {
         Surname

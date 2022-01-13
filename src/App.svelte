@@ -8,7 +8,7 @@
     user,
     messageToUser,
     loadersCount,
-    isOnline
+    isOnline,
   } from "./store";
   import { onMount } from "svelte";
   import { BarLoader } from "svelte-loading-spinners";
@@ -60,7 +60,7 @@
     newDeptorInfo.surname = defaultValue;
     newDeptorInfo.money = defaultValue;
   }
-  
+
   const AddDebtor = async () => {
     $loadersCount++;
     const { name, surname, money } = newDeptorInfo;
@@ -87,7 +87,7 @@
     }
   };
 
-  const DeleteThis = async (idToRemove) => {
+  const DeleteThis = async idToRemove => {
     $loadersCount++;
     try {
       await http.startExecuteMyMutation(Queries.DeleteById(idToRemove));
@@ -132,7 +132,8 @@
                   <td>{debtor.Name}</td>
                   <td>{debtor.Debt}</td>
                   <td
-                    ><button on:click={() => DeleteThis(debtor.id)}>Delete</button
+                    ><button on:click={() => DeleteThis(debtor.id)}
+                      >Delete</button
                     ></td
                   >
                 </tr>
@@ -159,20 +160,20 @@
           <div class="overlay background" />
         </div>
       {/if}
-      {:else}
-        <div class="overlay">
-          <h1>Please login before start</h1>
-          <button on:click={login}>Login</button>
-          <div class="overlay background" />
-        </div>
-      {/if}
     {:else}
+      <div class="overlay">
+        <h1>Please login before start</h1>
+        <button on:click={login}>Login</button>
+        <div class="overlay background" />
+      </div>
+    {/if}
+  {:else}
     <div class="overlay">
       <h1>Waiting the internet connection to be restored</h1>
       <BarLoader size="120" color="white" unit="px" />
       <div class="overlay background" />
     </div>
-    {/if}
+  {/if}
 </main>
 
 <style>
