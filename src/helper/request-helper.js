@@ -26,6 +26,7 @@ class RequestHelper {
   async startFetchMyQuery(operationsDoc) {
     loadersCount.update(n => n + 1);
     const { errors, data } = await this.fetchMyQuery(operationsDoc);
+    loadersCount.update(n => n - 1);
     if (errors) {
       throw new Error(errors[0].message || "Unknown error");
     }
@@ -39,6 +40,7 @@ class RequestHelper {
   async startExecuteMyMutation(operationsDoc) {
     loadersCount.update(n => n + 1);
     const { errors, data } = await this.executeMyMutation(operationsDoc);
+    loadersCount.update(n => n - 1);
     if (errors) {
       throw new Error(errors[0].message || "Unknown error");
     }

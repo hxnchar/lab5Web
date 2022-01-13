@@ -17,7 +17,7 @@ async function loginWithPopup(client, options) {
     token.set(accessToken.__raw);
     isAuthenticated.set(true);
   } catch (e) {
-    throw new Error(errors[0].message || "Unknown error");
+    throw new Error(e[0].message || "Unknown error");
   } finally {
     popupOpen.set(false);
   }

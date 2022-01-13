@@ -63,8 +63,6 @@
       $messageToUser = "Added successfully";
     } catch (e) {
       $messageToUser = `Error occurred while inserting: ${e.message}. Check values to be inserted`;
-    } finally {
-      $loadersCount--;
     }
   };
 
@@ -75,8 +73,6 @@
       $messageToUser = "Deleted successfully";
     } catch (e) {
       $messageToUser = `Error occurred: ${e.message}`;
-    } finally {
-      $loadersCount--;
     }
   };
 </script>
