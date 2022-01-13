@@ -96,7 +96,7 @@
           <div class="overlay background" />
         </div>
       {:else if $debtors}
-        <header>{$loadersCount}</header>
+        <header>Debtors list</header>
         <main>
           {#if $debtors.length === 0}
             <h1>No deptors yet :(</h1>
