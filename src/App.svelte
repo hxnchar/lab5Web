@@ -84,7 +84,7 @@
 <svelte:window bind:online />
 
 <main>
-  {#if $online}
+  {#if online}
     {#if $isAuthenticated}
       {#if $debtors.loading}
         <div class="overlay">
