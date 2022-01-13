@@ -1,5 +1,6 @@
 import { token, loadersCount } from "../store";
 import { get } from "svelte/store";
+import stylelintConfigSvelteRoboleary from "stylelint-config-svelte-roboleary";
 
 class RequestHelper {
   API_URL = api_url_env;
@@ -26,7 +27,6 @@ class RequestHelper {
   async startFetchMyQuery(operationsDoc) {
     loadersCount.update(n => n + 1);
     const { errors, data } = await this.fetchMyQuery(operationsDoc);
-    loadersCount.update(n => n - 1);
     if (errors) {
       throw new Error(errors[0].message || "Unknown error");
     }
@@ -40,7 +40,6 @@ class RequestHelper {
   async startExecuteMyMutation(operationsDoc) {
     loadersCount.update(n => n + 1);
     const { errors, data } = await this.executeMyMutation(operationsDoc);
-    loadersCount.update(n => n - 1);
     if (errors) {
       throw new Error(errors[0].message || "Unknown error");
     }

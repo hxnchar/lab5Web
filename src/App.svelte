@@ -12,7 +12,6 @@
   import { onMount } from "svelte";
   import { BarLoader } from "svelte-loading-spinners";
   import auth from "./auth-service";
-
   token.subscribe(async tokenValue => {
     if (tokenValue != "") {
       const { laba5_Debtors } = await http.startFetchMyQuery(
@@ -63,6 +62,8 @@
       $messageToUser = "Added successfully";
     } catch (e) {
       $messageToUser = `Error occurred while inserting: ${e.message}. Check values to be inserted`;
+    } finally {
+      loadersCount.update(n => n - 1);
     }
   };
 
@@ -73,6 +74,8 @@
       $messageToUser = "Deleted successfully";
     } catch (e) {
       $messageToUser = `Error occurred: ${e.message}`;
+    } finally {
+      loadersCount.update(n => n - 1);
     }
   };
 </script>
@@ -93,7 +96,7 @@
           <div class="overlay background" />
         </div>
       {:else if $debtors}
-        <header>Debtors list</header>
+        <header>{$loadersCount}</header>
         <main>
           {#if $debtors.length === 0}
             <h1>No deptors yet :(</h1>
