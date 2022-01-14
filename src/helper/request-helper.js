@@ -1,6 +1,5 @@
-import { token, loadersCount } from "../store";
+import { token, loadersCount, messageToUser } from "../store";
 import { get } from "svelte/store";
-import stylelintConfigSvelteRoboleary from "stylelint-config-svelte-roboleary";
 
 class RequestHelper {
   API_URL = api_url_env;
@@ -26,11 +25,17 @@ class RequestHelper {
 
   async startFetchMyQuery(operationsDoc) {
     loadersCount.update(n => n + 1);
-    const { errors, data } = await this.fetchMyQuery(operationsDoc);
-    if (errors) {
-      throw new Error(errors[0].message || "Unknown error");
+    try {
+      const { errors, data } = await this.fetchMyQuery(operationsDoc);
+      if (errors) {
+        throw new Error(errors[0].message || "Unknown error");
+      }
+      return data;
+    } catch (e) {
+      $messageToUser = `Error occurred: ${e.message}`;
+    } finally {
+      loadersCount.update(n => n - 1);
     }
-    return data;
   }
 
   executeMyMutation(operationsDoc) {
@@ -39,11 +44,17 @@ class RequestHelper {
 
   async startExecuteMyMutation(operationsDoc) {
     loadersCount.update(n => n + 1);
-    const { errors, data } = await this.executeMyMutation(operationsDoc);
-    if (errors) {
-      throw new Error(errors[0].message || "Unknown error");
+    try {
+      const { errors, data } = await this.executeMyMutation(operationsDoc);
+      if (errors) {
+        throw new Error(errors[0].message || "Unknown error");
+      }
+      return data;
+    } catch (e) {
+      $messageToUser = `Error occurred: ${e.message}`;
+    } finally {
+      loadersCount.update(n => n - 1);
     }
-    return data;
   }
 }
 export default new RequestHelper();

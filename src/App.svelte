@@ -21,6 +21,7 @@
     }
   });
 
+  $: $messageToUser && setTimeout(() => ($messageToUser = ""), 5000);
   let auth0Client, online;
   let newDeptorInfo = {};
 
@@ -62,9 +63,6 @@
       $messageToUser = "Added successfully";
     } catch (e) {
       $messageToUser = `Error occurred while inserting: ${e.message}. Check values to be inserted`;
-    } finally {
-      // не вынес в startExecuteMyMutation, потому что там был бы костыль
-      $loadersCount--;
     }
   };
 
@@ -75,9 +73,6 @@
       $messageToUser = "Deleted successfully";
     } catch (e) {
       $messageToUser = `Error occurred: ${e.message}`;
-    } finally {
-      // не вынес в startExecuteMyMutation, потому что там был бы костыль
-      $loadersCount--;
     }
   };
 </script>

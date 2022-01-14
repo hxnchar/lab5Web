@@ -6,5 +6,5 @@ export const user = writable({});
 export const popupOpen = writable(false);
 export const error = writable();
 export const messageToUser = writable("");
-export const loadersCount = writable(-1);
+export const loadersCount = writable(0);
 export const isOnline = writable(true);
